@@ -1,0 +1,26 @@
+{
+   "get": { 
+         
+         "skip": ["PixelData",
+                  "RedPaletteColorLookupTableData",
+                  "GreenPaletteColorLookupTableData",
+                  "BluePaletteColorLookupTableData",
+                  "VOILUTSequence"],
+
+         "ids":{
+            "entity":"PatientID",
+            "item":"AccessionNumber"
+         }
+
+   },
+
+   "put":{
+
+          "actions":[
+ 
+              {"action":"ADD" ,"field":"PatientIdentityRemoved","value": "Yes"},
+              {"action":"KEEP","field":"PatientID"},
+              {"action":"KEEP","field":"PixelData"}
+      ]
+   }
+}
