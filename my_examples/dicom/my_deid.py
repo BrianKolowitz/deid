@@ -2,14 +2,38 @@
 # This is a complete example of doing de-identifiction. For details, see our docs
 # https://pydicom.github.io/deid
 import os
+import csv
 import datetime
+import itertools
 from pydicom import read_file
 from pydicom.uid import generate_uid
 from deid.dicom import replace_identifiers, get_files, get_identifiers
 from deid.utils import get_installdir
 from deid.config import load_deid
 
-def deid_data(data_path, output_path, deid_path, config_file_path, clean_output_directory):
+def load_look_up_table(lut_path):
+    lut = {}
+    with open(lut_path, 'r') as f:
+        reader = csv.reader(f)
+        for i, row in zip(itertools.count(), reader):
+            if i == 0:
+                continue # skip header
+            lut[row[0]] = row[1]
+    return lut
+
+def look_up_value(lut, lookup_key):
+    if lookup_key in lut:
+        return lut[lookup_key]
+    raise Exception('%s not found' %lookup_key)
+
+def deid_data(data_path, 
+              output_path, 
+              deid_path, 
+              config_file_path, 
+              clean_output_directory,
+              lut_patient_id,
+              lut_accession_number):
+
     # Get the dicom files
     dicom_files = get_files(data_path)
 
@@ -32,13 +56,13 @@ def deid_data(data_path, output_path, deid_path, config_file_path, clean_output_
     for image, fields in ids.items():
         fields['patient_birth_date'] = datetime.datetime.now()
         fields['study_date'] = datetime.datetime.now()
-        fields['patient_id'] = 'pid-%s' %(count)
-        fields['patient_name'] = "pname-%s" %(count)
-        fields['patient_sex'] = "O"
-        fields['accession_number'] = 'acc-%s' %(count)
+        fields['patient_id'] = look_up_value(lut_patient_id, fields['PatientID'])
+        fields['patient_name'] = "pname-%s" %(fields['patient_id'])
+        fields['patient_sex'] = "U"
+        fields['accession_number'] = look_up_value(lut_accession_number, fields['AccessionNumber'])
         fields['sop_instance_uid'] = generate_uid()
         updated_ids[image] = fields
-        count+=1
+        count += 1
 
     if clean_output_directory:
         output_files = os.listdir(output_path)
@@ -62,12 +86,23 @@ def dump_file(dicom_file_path):
     print(dicom_file.AccessionNumber)
 
 if __name__ == "__main__":
+    lut_patient_id_path = os.path.abspath('%s/Documents/_data/deid_config/lut_patient_id.csv' %os.path.expanduser('~'))
+    lut_accession_number_path = os.path.abspath('%s/Documents/_data/deid_config/lut_accession_number.csv' %os.path.expanduser('~'))
+    lut_patient_id = load_look_up_table(lut_patient_id_path)
+    lut_accession_number = load_look_up_table(lut_accession_number_path)
+
     data_path = os.path.abspath('%s/Documents/_data/phi_test' %os.path.expanduser('~'))
     output_path = os.path.abspath('%s/Documents/_data/out' %os.path.expanduser('~'))
     deid_path = os.path.abspath("%s/../my_examples/deid/" %get_installdir())
     config_file_path = os.path.abspath("%s/../my_examples/dicom/config.json" %get_installdir())
     clean_output_directory = True
 
-    cleaned_files = deid_data(data_path, output_path, deid_path, config_file_path, clean_output_directory)
+    cleaned_files = deid_data(data_path, 
+                              output_path, 
+                              deid_path, 
+                              config_file_path, 
+                              clean_output_directory,
+                              lut_patient_id,
+                              lut_accession_number)
     print(cleaned_files)
     dump_file(cleaned_files[0])
