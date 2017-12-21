@@ -436,12 +436,12 @@ REMOVE OrderEntererLocation
 REMOVE AssignedLocation
 
 ADD IssuerOfPatientID STARR. In an effort to remove PHI all dates are offset from their original values.
-ADD PatientBirthDate var:patient_birth_date
-ADD StudyDate var:study_date
 ADD PatientID var:patient_id
 ADD PatientName var:patient_name
+ADD PatientBirthDate var:patient_birth_date
 ADD PatientSex var:patient_sex
 ADD AccessionNumber var:accession_number
+ADD StudyDate var:study_date
 ADD SOPInstanceUID var:sop_instance_uid
 ADD PatientIdentityRemoved Yes
 REMOVE jitter

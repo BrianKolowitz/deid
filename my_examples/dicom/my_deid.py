@@ -26,10 +26,10 @@ def look_up_value(lut, lookup_key):
         return lut[lookup_key]
     raise Exception('%s not found' %lookup_key)
 
-def deid_data(data_path, 
-              output_path, 
-              deid_path, 
-              config_file_path, 
+def deid_data(data_path,
+              output_path,
+              deid_path,
+              config_file_path,
               clean_output_directory,
               lut_patient_id,
               lut_accession_number):
@@ -51,14 +51,14 @@ def deid_data(data_path,
 
     # Let's add the fields that we specify to add in our deid, a source_id for SOPInstanceUID,
     # and an id for PatientID
-    count=0
+    count = 0
     updated_ids = dict()
     for image, fields in ids.items():
         fields['patient_birth_date'] = datetime.datetime.now()
         fields['study_date'] = datetime.datetime.now()
         fields['patient_id'] = look_up_value(lut_patient_id, fields['PatientID'])
         fields['patient_name'] = "pname-%s" %(fields['patient_id'])
-        fields['patient_sex'] = "U"
+        fields['patient_sex'] = "O"
         fields['accession_number'] = look_up_value(lut_accession_number, fields['AccessionNumber'])
         fields['sop_instance_uid'] = generate_uid()
         updated_ids[image] = fields
@@ -78,12 +78,12 @@ def deid_data(data_path,
                                         output_folder=output_path)
     return cleaned_files
 
-def dump_file(dicom_file_path):
+def dump_file(dicom_file_path, fields):
     dicom_file = read_file(dicom_file_path)
-    print(dicom_file)
-    print(dicom_file.PatientID)
-    print(dicom_file.PatientName)
-    print(dicom_file.AccessionNumber)
+    print(dicom_file_path)
+    for field in fields:
+        print(dicom_file.data_element(field))
+    print()
 
 if __name__ == "__main__":
     lut_patient_id_path = os.path.abspath('%s/Documents/_data/deid_config/lut_patient_id.csv' %os.path.expanduser('~'))
@@ -97,12 +97,19 @@ if __name__ == "__main__":
     config_file_path = os.path.abspath("%s/../my_examples/dicom/config.json" %get_installdir())
     clean_output_directory = True
 
-    cleaned_files = deid_data(data_path, 
-                              output_path, 
-                              deid_path, 
-                              config_file_path, 
+    cleaned_files = deid_data(data_path,
+                              output_path,
+                              deid_path,
+                              config_file_path,
                               clean_output_directory,
                               lut_patient_id,
                               lut_accession_number)
-    print(cleaned_files)
-    dump_file(cleaned_files[0])
+
+    for cleaned_file in cleaned_files:
+        dump_file(cleaned_file, ['PatientID',
+                                 'PatientName',
+                                 'PatientBirthDate',
+                                 'PatientSex',
+                                 'AccessionNumber',
+                                 'StudyDate',
+                                 'SOPInstanceUID'])
