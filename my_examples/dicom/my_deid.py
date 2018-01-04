@@ -113,7 +113,7 @@ def get_values(dict, keys):
             
 
 if __name__ == "__main__":
-    osx = True
+    osx = False
     if osx:
         # osx
         deid_path = os.path.abspath("%s/../my_examples/deid/" %get_installdir())
@@ -128,8 +128,8 @@ if __name__ == "__main__":
         # win
         deid_path = os.path.abspath("%s\\..\\my_examples\\deid" %get_installdir())
         config_file_path = os.path.abspath("%s\\..\\my_examples\\dicom\\config.json" %get_installdir())
-        input_path = os.path.abspath('f:\\data\\phi_test')
-        output_path = os.path.abspath('f:\\data\\out_test')
+        input_path = os.path.abspath('f:\\data\\filtered\\whitelist')
+        output_path = os.path.abspath('f:\\data\\out')
         lut_patient_id_path = os.path.abspath('f:\\data\\deid_config\\lut_patient_id.csv')
         lut_accession_number_path = os.path.abspath('f:\\data\\deid_config\\lut_accession_number.csv')
         lut_patient_id = load_look_up_table(lut_patient_id_path)
