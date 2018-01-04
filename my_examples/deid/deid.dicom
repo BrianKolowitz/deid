@@ -27,7 +27,7 @@ LABEL Burned In Annotation # (CTP)
   contains BurnedInAnnotation YES
 
 %header
-
+REMOVE contains:Address
 REMOVE endswith:Time
 REMOVE endswith:Date
 REMOVE endswith:time

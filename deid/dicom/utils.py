@@ -32,7 +32,7 @@ from deid.logger import bot
 from pydicom import read_file
 from pydicom._dicom_dict import DicomDictionary
 from pydicom.tag import Tag
-from deid.utils import recursive_find
+from deid.utils import recursive_find, recursive_find_iterator
 from .tags import *
 from .validate import validate_dicoms
 from deid.identifiers import get_timestamp
@@ -58,6 +58,7 @@ def get_files(contenders,check=True,pattern=None,force=False):
 
     dcm_files = []
     for contender in contenders:
+        print('contender: ', type(contender), contender)
         if os.path.isdir(contender):
             dicom_dir = recursive_find(contender,pattern=pattern)
             bot.debug("Found %s contender files in %s" %(len(dicom_dir),
@@ -71,6 +72,28 @@ def get_files(contenders,check=True,pattern=None,force=False):
         dcm_files = validate_dicoms(dcm_files,force=force)
     return dcm_files
 
+
+def get_files_iterator(contenders,pattern=None,force=False):
+    '''get_dcm_files will take a list of single dicom files or directories,
+    and return a generator that yields complete paths to all files
+    :param pattern: A pattern to use with fnmatch. If None, * is used
+    :param force: force reading of the files, if some headers invalid.
+    Not recommended, as many non-dicom will come through
+    '''
+    if not isinstance(contenders,list):
+        contenders = [contenders]
+
+    for contender in contenders:
+        if os.path.isdir(contender):
+            for d in recursive_find_iterator(contender,pattern=pattern):
+                if d is None:
+                    break
+                else:
+                    yield d
+                    bot.debug("Found contender file in %s" %(os.path.basename(contender)))
+        else:
+            bot.debug("Adding single contender file %s" %(contender))
+            yield contender
 
 
 def save_dicom(dicom,dicom_file,output_folder=None,overwrite=False):

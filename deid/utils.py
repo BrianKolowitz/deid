@@ -112,3 +112,14 @@ def recursive_find(base,pattern=None):
             files.append(os.path.join(root, filename))
 
     return files
+
+def recursive_find_iterator(base,pattern=None):
+    '''recursive find iterator will yield dicom files in all directory levels
+    below a base path. It uses get_dcm_files to find the files in the bases.
+    '''
+    if pattern is None:
+        pattern = "*"
+
+    for root, dirnames, filenames in os.walk(base):
+        for filename in fnmatch.filter(filenames, pattern):
+            yield os.path.join(root, filename)
