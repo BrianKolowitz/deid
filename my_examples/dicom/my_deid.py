@@ -118,7 +118,7 @@ if __name__ == "__main__":
         # osx
         deid_path = os.path.abspath("%s/../my_examples/deid/" %get_installdir())
         config_file_path = os.path.abspath("%s/../my_examples/dicom/config.json" %get_installdir())
-        input_path = os.path.abspath('%s/Documents/_data/phi_test' %os.path.expanduser('~'))
+        input_path = os.path.abspath('%s/Documents/_data/phi' %os.path.expanduser('~'))
         output_path = os.path.abspath('%s/Documents/_data/out' %os.path.expanduser('~'))
         lut_patient_id_path = os.path.abspath('%s/Documents/_data/deid_config/lut_patient_id.csv' %os.path.expanduser('~'))
         lut_accession_number_path = os.path.abspath('%s/Documents/_data/deid_config/lut_accession_number.csv' %os.path.expanduser('~'))
@@ -170,7 +170,7 @@ if __name__ == "__main__":
                                                 'PatientID','PatientName','PatientBirthDate','PatientSex','AccessionNumber','Modality','StudyDate','SOPInstanceUID','InstitutionName','StationName'])
                 row_values += get_values(file_tags, ['PatientID','PatientName','PatientBirthDate','PatientSex','AccessionNumber','Modality','StudyDate','SOPInstanceUID','InstitutionName','StationName'])
                 row_text = ','.join(row_values)
-                output_csv.write("%s\n" %row_text[:-1])
+                output_csv.write("%s\n" %row_text)
 
     end_time = time.time()
     print("Elapsed time %s" %str(end_time - start_time))
