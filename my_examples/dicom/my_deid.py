@@ -113,27 +113,6 @@ def get_values(dict, keys):
             
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    # # osx
-    # deid_path = os.path.abspath("%s/../my_examples/deid/" %get_installdir())
-    # config_file_path = os.path.abspath("%s/../my_examples/dicom/config.json" %get_installdir())
-    # input_path = os.path.abspath('%s/Documents/_data/phi_test' %os.path.expanduser('~'))
-    # output_path = os.path.abspath('%s/Documents/_data/out' %os.path.expanduser('~'))
-    # lut_patient_id_path = os.path.abspath('%s/Documents/_data/deid_config/lut_patient_id.csv' %os.path.expanduser('~'))
-    # lut_accession_number_path = os.path.abspath('%s/Documents/_data/deid_config/lut_accession_number.csv' %os.path.expanduser('~'))
-    # lut_patient_id = load_look_up_table(lut_patient_id_path)
-    # lut_accession_number = load_look_up_table(lut_accession_number_path)
-    
-    # win
-    deid_path = os.path.abspath("%s\\..\\my_examples\\deid" %get_installdir())
-    config_file_path = os.path.abspath("%s\\..\\my_examples\\dicom\\config.json" %get_installdir())
-    input_path = os.path.abspath('f:\\data\\filtered\\whitelist')
-    output_path = os.path.abspath('f:\\data\\out')
-    lut_patient_id_path = os.path.abspath('f:\\data\\deid_config\\lut_patient_id.csv')
-    lut_accession_number_path = os.path.abspath('f:\\data\\deid_config\\lut_accession_number.csv')
-    lut_patient_id = load_look_up_table(lut_patient_id_path)
-    lut_accession_number = load_look_up_table(lut_accession_number_path)
-=======
     osx = True
     if osx:
         # osx
@@ -155,7 +134,6 @@ if __name__ == "__main__":
         lut_accession_number_path = os.path.abspath('f:\\data\\deid_config\\lut_accession_number.csv')
         lut_patient_id = load_look_up_table(lut_patient_id_path)
         lut_accession_number = load_look_up_table(lut_accession_number_path)
->>>>>>> bf139f82f88543d3fa03d4e7d49cb825c7ff6f3b
 
     # common
     output_csv_path = os.path.join(output_path, 'file_crosswalk.csv')
