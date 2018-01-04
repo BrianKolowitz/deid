@@ -19,8 +19,8 @@ from deid.dicom import get_files
 from deid.data import get_dataset
 
 deid_path = os.path.abspath("%s\\..\\my_examples\\deid" %get_installdir())
-input_path = os.path.abspath('f:\\data\\phi_test')
-output_path = os.path.abspath('f:\\data\\filtered_test')
+input_path = os.path.abspath('f:\\data\\phi')
+output_path = os.path.abspath('f:\\data\\filtered')
 
 deid = load_deid(deid_path)
 dicom_files = get_files(input_path)
@@ -44,7 +44,7 @@ filters = [ #add in order of precidence
         'path': os.path.join(output_path, 'blacklist')
     },
     {
-        'group': 'graylist',
+        'group': 'graylist', # matches names in deid.dicom e.g. %filter whitelist
         'path': os.path.join(output_path, 'graylist')
     },
     {

@@ -5,23 +5,26 @@ FORMAT dicom
 LABEL Xray
   contains Modality CR|DX
 
+%filter graylist
+
+LABEL Missing ImageType 
+  missing ImageType || empty ImageType
+
+LABEL Secondary or derived catchall 
+  contains ImageType SCREEN|SAVE
+
+LABEL Burned In Annotation
+  contains SeriesDescription SAVE
+  || contains BurnedInAnnotation YES
+  || empty ImageType
+  
 %filter blacklist
 
 LABEL Not Xray
   contains Modality PR|RG
 
-LABEL Blacklist secondary or derived catchall
-  contains ImageType SECONDARY|SCREEN|SAVE
-
 LABEL Burned In Annotation # (CTP)
-  contains ImageType SAVE
-  || contains SeriesDescription SAVE
-  || contains BurnedInAnnotation YES
-  || empty ImageType
-  || empty DateOfSecondaryCapture
-  || empty SecondaryCaptureDeviceManufacturer
-  || empty SecondaryCaptureDeviceManufacturerModelName
-  || empty SecondaryCaptureDeviceSoftwareVersions
+  contains BurnedInAnnotation YES
 
 %header
 

@@ -77,6 +77,7 @@ def deid_data(input_path,
                                         config=config_file_path,
                                         remove_private=True,
                                         output_folder=output_path)
+
     cleaned_file_names = [os.path.basename(f) for f in cleaned_files]
     # iterate through the cleaned files and add a cleaned flag
     pad_width = len(str(len(cleaned_file_names)))
@@ -134,8 +135,8 @@ if __name__ == "__main__":
     # win
     deid_path = os.path.abspath("%s\\..\\my_examples\\deid" %get_installdir())
     config_file_path = os.path.abspath("%s\\..\\my_examples\\dicom\\config.json" %get_installdir())
-    input_path = os.path.abspath('f:\\data\\phi_test')
-    output_path = os.path.abspath('f:\\data\\out_test')
+    input_path = os.path.abspath('f:\\data\\filtered\\whitelist')
+    output_path = os.path.abspath('f:\\data\\out')
     lut_patient_id_path = os.path.abspath('f:\\data\\deid_config\\lut_patient_id.csv')
     lut_accession_number_path = os.path.abspath('f:\\data\\deid_config\\lut_accession_number.csv')
     lut_patient_id = load_look_up_table(lut_patient_id_path)
@@ -180,4 +181,3 @@ if __name__ == "__main__":
             row_values += get_values(file_tags, ['PatientID','PatientName','PatientBirthDate','PatientSex','AccessionNumber','Modality','StudyDate','SOPInstanceUID','InstitutionName','StationName'])
             row_text = ','.join(row_values)
             output_csv.write("%s\n" %row_text[:-1])
-
