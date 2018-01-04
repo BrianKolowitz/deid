@@ -6,6 +6,8 @@ import csv
 import datetime
 import itertools
 import time
+import platform
+
 from pydicom import read_file
 from pydicom.uid import generate_uid
 from deid.dicom import replace_identifiers, get_files_iterator, get_identifiers
@@ -113,7 +115,7 @@ def get_values(dict, keys):
             
 
 if __name__ == "__main__":
-    osx = False
+    osx = platform.system().lower() == 'darwin'
     if osx:
         # osx
         deid_path = os.path.abspath("%s/../my_examples/deid/" %get_installdir())
