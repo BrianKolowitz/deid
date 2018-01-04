@@ -152,25 +152,6 @@ if __name__ == "__main__":
             'DeidPatientID', 'DeidPatientName', 'DeidPatientBirthDate', 'DeidPatientSex', 'DeidAccessionNumber', 'DeidModality' 'DeidStudyDate', 'DeidSOPInstanceUID', 'DeidInstitutionName', 'DeidStationName']
         row_text = ','.join(row_values)
         output_csv.write("%s\n" %row_text[:-1])
-<<<<<<< HEAD
-        
-        for index, (image, fields) in enumerate(updated_ids.items()):
-            file_tags = dump_file(fields['renamed_file_path'], ['PatientID',
-                                                           'PatientName',
-                                                           'PatientBirthDate',
-                                                           'PatientSex',
-                                                           'AccessionNumber',
-                                                           'Modality',
-                                                           'StudyDate',
-                                                           'SOPInstanceUID',
-                                                           'InstitutionName',
-                                                           'StationName'])
-            row_values = get_values(fields, ['cleaned','original_file_path','cleaned_file_path','renamed_file_path', 'Modality',
-                                             'PatientID','PatientName','PatientBirthDate','PatientSex','AccessionNumber','Modality','StudyDate','SOPInstanceUID','InstitutionName','StationName'])
-            row_values += get_values(file_tags, ['PatientID','PatientName','PatientBirthDate','PatientSex','AccessionNumber','Modality','StudyDate','SOPInstanceUID','InstitutionName','StationName'])
-            row_text = ','.join(row_values)
-            output_csv.write("%s\n" %row_text[:-1])
-=======
 
         for dicom_file_ids in deid_data(input_path, output_path, deid_path, config_file_path, 
                                      lut_patient_id, lut_accession_number):
@@ -193,4 +174,3 @@ if __name__ == "__main__":
 
     end_time = time.time()
     print("Elapsed time %s" %str(end_time - start_time))
->>>>>>> bf139f82f88543d3fa03d4e7d49cb825c7ff6f3b
