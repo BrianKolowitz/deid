@@ -27,7 +27,6 @@ LABEL Burned In Annotation # (CTP)
   contains BurnedInAnnotation YES
 
 %header
-REMOVE contains:Address
 REMOVE endswith:Time
 REMOVE endswith:Date
 REMOVE endswith:time
@@ -94,6 +93,7 @@ REMOVE ScheduledStudyLocation
 REMOVE ScheduledStudyLocationAETitle
 REMOVE OrderEntererLocation
 REMOVE AssignedLocation
+REMOVE InstitutionAddress
 
 ADD IssuerOfPatientID STARR. In an effort to remove PHI all dates are offset from their original values.
 ADD PatientID var:patient_id
