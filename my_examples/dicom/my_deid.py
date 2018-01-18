@@ -11,21 +11,8 @@ from pydicom.uid import generate_uid
 from deid.dicom import replace_identifiers, get_files_iterator, get_identifiers
 from deid.utils import get_installdir
 from deid.config import load_deid
+from . import LookupTable
 
-def load_look_up_table(lut_path):
-    lut = {}
-    with open(lut_path, 'r') as f:
-        reader = csv.reader(f)
-        for i, row in zip(itertools.count(), reader):
-            if i == 0:
-                continue # skip header
-            lut[row[0]] = row[1]
-    return lut
-
-def look_up_value(lut, lookup_key):
-    if lookup_key in lut:
-        return lut[lookup_key]
-    raise Exception('%s not found' %lookup_key)
 
 def deid_data(input_path,
               output_path,
@@ -51,10 +38,10 @@ def deid_data(input_path,
         for (image, fields) in dicom_file_ids.items():
             fields['patient_birth_date'] = datetime.datetime.now()
             fields['study_date'] = datetime.datetime.now()
-            fields['patient_id'] = look_up_value(lut_patient_id, fields['PatientID'])
+            fields['patient_id'] = lut_patient_id.look_up_value(fields['PatientID'], fail=False, add=True, value_format='p{:06d}')
             fields['patient_name'] = "pname-%s" %(fields['patient_id'])
             fields['patient_sex'] = "O"
-            fields['accession_number'] = look_up_value(lut_accession_number, fields['AccessionNumber'])
+            fields['accession_number'] = lut_accession_number.look_up_value(fields['AccessionNumber'], fail=False, add=True, value_format='a{:06d}')
             fields['sop_instance_uid'] = generate_uid()
             fields['institution_name'] = 'ACME'
             fields['station_name'] = 'Zenith EZ PC'
@@ -122,8 +109,6 @@ if __name__ == "__main__":
         output_path = os.path.abspath('%s/Documents/_data/out' %os.path.expanduser('~'))
         lut_patient_id_path = os.path.abspath('%s/Documents/_data/deid_config/lut_patient_id.csv' %os.path.expanduser('~'))
         lut_accession_number_path = os.path.abspath('%s/Documents/_data/deid_config/lut_accession_number.csv' %os.path.expanduser('~'))
-        lut_patient_id = load_look_up_table(lut_patient_id_path)
-        lut_accession_number = load_look_up_table(lut_accession_number_path)
     else:
         # win
         deid_path = os.path.abspath("%s\\..\\my_examples\\deid" %get_installdir())
@@ -132,8 +117,11 @@ if __name__ == "__main__":
         output_path = os.path.abspath('f:\\data\\out')
         lut_patient_id_path = os.path.abspath('f:\\data\\deid_config\\lut_patient_id.csv')
         lut_accession_number_path = os.path.abspath('f:\\data\\deid_config\\lut_accession_number.csv')
-        lut_patient_id = load_look_up_table(lut_patient_id_path)
-        lut_accession_number = load_look_up_table(lut_accession_number_path)
+
+    lut_patient_id = LookupTable()
+    lut_patient_id.load(lut_patient_id_path)
+    lut_accession_number = LookupTable()
+    lut_accession_number.load(lut_accession_number_path)
 
     # common
     output_csv_path = os.path.join(output_path, 'file_crosswalk.csv')
@@ -174,3 +162,6 @@ if __name__ == "__main__":
 
     end_time = time.time()
     print("Elapsed time %s" %str(end_time - start_time))
+
+    lut_patient_id.save(lut_patient_id_path)
+    lut_accession_number.save(lut_accession_number_path)
