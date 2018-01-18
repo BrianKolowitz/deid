@@ -10,7 +10,7 @@ import platform
 
 from pydicom import read_file
 from pydicom.uid import generate_uid
-from deid.dicom import replace_identifiers, get_files_iterator, get_identifiers
+from deid.dicom import replace_identifiers, get_identifiers
 from deid.utils import get_installdir
 from deid.config import load_deid
 from . import LookupTable
@@ -27,7 +27,7 @@ def deid_data(input_path,
     deid = load_deid(deid_path)
 
     # Get the dicom files
-    for index, dicom_file in zip(itertools.count(), get_files_iterator(input_path)):
+    for index, dicom_file in zip(itertools.count(), get_files(input_path)):
         # This is the function to get identifiers
         dicom_file_ids = get_identifiers(dicom_file)
         #**
