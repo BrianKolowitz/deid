@@ -23,7 +23,7 @@ input_path = os.path.abspath('f:\\data\\phi')
 output_path = os.path.abspath('f:\\data\\filtered')
 
 deid = load_deid(deid_path)
-dicom_files = get_files(input_path)
+dicom_files = get_files(input_path, check=False)
 
 #########################################
 # 2. Create Client
