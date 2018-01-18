@@ -6,8 +6,7 @@ from .header import (
 )
 
 from .utils import (
-    get_files,
-    get_files_iterator
+    get_files
 )
 
 from .fields import  extract_sequence
